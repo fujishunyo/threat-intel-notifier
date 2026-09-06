@@ -1,35 +1,33 @@
 name: RSS to Discord Notifier
- 
+
 on:
   schedule:
-    # UTC基準。30分ごとに実行(日本時間は+9時間)
     - cron: "*/30 * * * *"
-  workflow_dispatch: {}  # 手動実行ボタンを有効化(初回テスト用)
- 
-# 既読リストのコミットに書き込み権限が必要
+  workflow_dispatch: {}
+
 permissions:
   contents: write
- 
+
 jobs:
   check-feeds:
     runs-on: ubuntu-latest
     steps:
       - name: リポジトリをチェックアウト
         uses: actions/checkout@v4
- 
+
       - name: Pythonをセットアップ
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
- 
+
       - name: 依存パッケージをインストール
         run: pip install feedparser requests
- 
+
       - name: フィードをチェックしてDiscordに通知
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: python feed_notifier.py
- 
+
       - name: 既読リストの変更をコミット
         run: |
           git config user.name "feed-notifier-bot"
