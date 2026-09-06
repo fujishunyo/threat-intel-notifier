@@ -45,7 +45,8 @@ def clean_summary(raw_html: str) -> str:
 FEEDS = {
     "Unit 42": "https://unit42.paloaltonetworks.com/feed/",
     "Securelist (Kaspersky)": "https://securelist.com/feed/",
-    "Trellix": "https://www.trellix.com/blogs/feed/",  # 要確認・要修正
+    "Cisco Talos": "https://blog.talosintelligence.com/rss/",
+    "Microsoft Threat Intelligence": "https://www.microsoft.com/en-us/security/blog/topic/threat-intelligence/feed/",
 }
 
 # Discord Webhook URL は環境変数から取得(コードに直書きしない)
