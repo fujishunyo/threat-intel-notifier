@@ -21,10 +21,11 @@
     "6a8df88216c0b90001abb14b"
   ],
   "Microsoft Threat Intelligence": [
-    "https://www.microsoft.com/en-us/security/blog/?p=149294",
-    "https://www.microsoft.com/en-us/security/blog/?p=149220",
+    "https://www.microsoft.com/en-us/security/blog/?p=149252",
     "https://www.microsoft.com/en-us/security/blog/?p=149272",
+    "https://www.microsoft.com/en-us/security/blog/?p=149294",
     "https://www.microsoft.com/en-us/security/blog/2026/08/10/deadlock-ransomware-breaking-down-a-rust-based-encryptor-with-decentralized-recovery-infrastructure/",
-    "https://www.microsoft.com/en-us/security/blog/2026/09/01/counterfeit-installers-system-compromise-tracking-deceptive-software-download-campaign/"
+    "https://www.microsoft.com/en-us/security/blog/2026/09/01/counterfeit-installers-system-compromise-tracking-deceptive-software-download-campaign/",
+    "https://www.microsoft.com/en-us/security/blog/?p=149220"
   ]
 }
