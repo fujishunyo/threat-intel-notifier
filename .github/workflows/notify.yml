@@ -2,9 +2,11 @@ name: RSS to Discord Notifier
 
 on:
   schedule:
+    # UTC基準。30分ごとに実行(日本時間は+9時間)
     - cron: "*/30 * * * *"
-  workflow_dispatch: {}
+  workflow_dispatch: {}  # 手動実行ボタンを有効化(初回テスト用)
 
+# 既読リストのコミットに書き込み権限が必要
 permissions:
   contents: write
 
@@ -21,11 +23,12 @@ jobs:
           python-version: "3.12"
 
       - name: 依存パッケージをインストール
-        run: pip install feedparser requests
+        run: pip install feedparser requests beautifulsoup4
 
       - name: フィードをチェックしてDiscordに通知
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python feed_notifier.py
 
       - name: 既読リストの変更をコミット
