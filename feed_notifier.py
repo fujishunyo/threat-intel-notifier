@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-RSSフィードを巡回し、未通知の新着記事があればDiscordのWebhookへ投稿するスクリプト。
+RSSフィードを巡回し、新着記事をGemini APIで日本語要約した上でDiscordのWebhookへ通知するスクリプト。
 GitHub Actions等で定期実行することを想定。
 
-必要なパッケージ: feedparser, requests
-    pip install feedparser requests
+必要なパッケージ: feedparser, requests, beautifulsoup4
+    pip install feedparser requests beautifulsoup4
 """
 
 import html
@@ -16,6 +16,7 @@ from pathlib import Path
 
 import feedparser
 import requests
+from bs4 import BeautifulSoup
 
 
 def clean_summary(raw_html: str) -> str:
@@ -38,6 +39,80 @@ def clean_summary(raw_html: str) -> str:
     text = re.sub(r"\n{2,}", "\n", text)
 
     return text.strip()
+
+
+def fetch_article_text(url: str, max_chars: int = 8000) -> str:
+    """記事ページ本文をできるだけプレーンテキストで取得する(失敗したら空文字を返す)。"""
+    try:
+        resp = requests.get(
+            url,
+            timeout=15,
+            headers={"User-Agent": "Mozilla/5.0 (compatible; RSSDigestBot/1.0)"},
+        )
+        resp.raise_for_status()
+    except requests.RequestException as e:
+        print(f"[WARN] 記事本文の取得に失敗: {url} ({e})", file=sys.stderr)
+        return ""
+
+    soup = BeautifulSoup(resp.text, "html.parser")
+
+    # script/style/nav/footerなど本文に不要な要素を除去
+    for tag in soup(["script", "style", "nav", "footer", "header", "aside", "form"]):
+        tag.decompose()
+
+    # 本文らしき領域を優先的に狙う(見つからなければbody全体)
+    main = soup.find("article") or soup.find("main") or soup.body or soup
+
+    text = main.get_text(separator="\n")
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n{2,}", "\n", text).strip()
+
+    return text[:max_chars]
+
+
+def summarize_with_gemini(title: str, article_text: str, fallback_summary: str) -> str:
+    """Gemini APIで記事を日本語要約する。APIキー未設定・失敗時はRSSの抜粋にフォールバック。"""
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        return fallback_summary
+
+    source_text = article_text if article_text else fallback_summary
+    if not source_text:
+        return ""
+
+    prompt = f"""以下はセキュリティ脅威分析ブログの記事です。日本語で要約してください。
+
+タイトル: {title}
+
+本文:
+{source_text}
+
+要約のルール:
+- 400字程度で簡潔に
+- 「何の脅威/マルウェアの話か」「攻撃手法・技術的なポイント(難読化、サンドボックス回避、C2手法など、あれば特に)」「読者が注意すべき点」を含める
+- 前置きなしで要約本文だけを出力する"""
+
+    try:
+        resp = requests.post(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+            headers={
+                "x-goog-api-key": api_key,
+                "Content-Type": "application/json",
+            },
+            json={"contents": [{"parts": [{"text": prompt}]}]},
+            timeout=60,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        candidates = data.get("candidates", [])
+        if not candidates:
+            return fallback_summary
+        parts = candidates[0].get("content", {}).get("parts", [])
+        summary = "".join(p.get("text", "") for p in parts).strip()
+        return summary or fallback_summary
+    except requests.RequestException as e:
+        print(f"[WARN] Gemini要約に失敗、RSS抜粋を使用します: {e}", file=sys.stderr)
+        return fallback_summary
 
 # ---- 設定: 監視したいRSSフィードをここに追加 ----
 # 各ブログのトップページのソースから <link rel="alternate" type="application/rss+xml">
@@ -69,14 +144,15 @@ def save_seen(seen: dict) -> None:
     SEEN_FILE.write_text(json.dumps(seen, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
-def post_to_discord(feed_name: str, title: str, link: str, summary: str) -> None:
+def post_to_discord(feed_name: str, title: str, link: str, japanese_summary: str) -> None:
     # Discordの埋め込み(Embed)として見やすく整形
     embed = {
         "title": title[:250],
         "url": link,
-        "description": (summary or "")[:500],
+        "description": (japanese_summary or "")[:1500],
         "author": {"name": feed_name},
         "color": 0xE74C3C,
+        "footer": {"text": "要約 by Gemini"},
     }
     payload = {"embeds": [embed]}
 
@@ -111,10 +187,14 @@ def main() -> None:
 
             title = entry.get("title", "(no title)")
             link = entry.get("link", feed_url)
-            summary = clean_summary(entry.get("summary", ""))
+            fallback_summary = clean_summary(entry.get("summary", ""))
 
             print(f"[NEW] {feed_name}: {title}")
-            post_to_discord(feed_name, title, link, summary)
+
+            article_text = fetch_article_text(link)
+            japanese_summary = summarize_with_gemini(title, article_text, fallback_summary)
+
+            post_to_discord(feed_name, title, link, japanese_summary)
 
             new_ids.append(entry_id)
             updated = True
