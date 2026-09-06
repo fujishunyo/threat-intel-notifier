@@ -7,13 +7,37 @@ GitHub Actions等で定期実行することを想定。
     pip install feedparser requests
 """
 
+import html
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
 import feedparser
 import requests
+
+
+def clean_summary(raw_html: str) -> str:
+    """RSSのsummaryに含まれるHTMLタグを除去し、読みやすいプレーンテキストにする。"""
+    if not raw_html:
+        return ""
+
+    # <br>, </p> などブロック要素は改行に変換してから、残りのタグを除去
+    text = re.sub(r"<(br|/p|/div)\s*/?>", "\n", raw_html, flags=re.IGNORECASE)
+    text = re.sub(r"<[^>]+>", "", text)
+
+    # &amp; や &#8217; などのHTMLエンティティをデコード
+    text = html.unescape(text)
+
+    # 記事末尾によく付く "The post ... appeared first on ..." の定型文を除去
+    text = re.sub(r"\s*The post .* appeared first on .*\.?\s*$", "", text, flags=re.IGNORECASE | re.DOTALL)
+
+    # 連続する空白・改行を整理
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n{2,}", "\n", text)
+
+    return text.strip()
 
 # ---- 設定: 監視したいRSSフィードをここに追加 ----
 # 各ブログのトップページのソースから <link rel="alternate" type="application/rss+xml">
@@ -86,7 +110,7 @@ def main() -> None:
 
             title = entry.get("title", "(no title)")
             link = entry.get("link", feed_url)
-            summary = entry.get("summary", "")
+            summary = clean_summary(entry.get("summary", ""))
 
             print(f"[NEW] {feed_name}: {title}")
             post_to_discord(feed_name, title, link, summary)
