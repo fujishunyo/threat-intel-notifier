@@ -26,12 +26,15 @@
     "6aa0887d3930c20001ad11a5"
   ],
   "Microsoft Threat Intelligence": [
-    "https://www.microsoft.com/en-us/security/blog/2026/09/01/counterfeit-installers-system-compromise-tracking-deceptive-software-download-campaign/",
-    "https://www.microsoft.com/en-us/security/blog/?p=149252",
+    "https://www.microsoft.com/en-us/security/blog/2026/09/02/impersonating-it-support-threat-actors-turn-remote-session-into-enterprise-wide-access/",
     "https://www.microsoft.com/en-us/security/blog/?p=149220",
+    "https://www.microsoft.com/en-us/security/blog/2026/09/03/ascii-smuggling-crosses-over-from-ai-prompt-injection-to-phishing-evasion/",
+    "https://www.microsoft.com/en-us/security/blog/?p=149252",
     "https://www.microsoft.com/en-us/security/blog/?p=149294",
+    "https://www.microsoft.com/en-us/security/blog/2026/09/01/counterfeit-installers-system-compromise-tracking-deceptive-software-download-campaign/",
+    "https://www.microsoft.com/en-us/security/blog/?p=149272",
+    "https://www.microsoft.com/en-us/security/blog/?p=149369",
     "https://www.microsoft.com/en-us/security/blog/2026/08/10/deadlock-ransomware-breaking-down-a-rust-based-encryptor-with-decentralized-recovery-infrastructure/",
-    "https://www.microsoft.com/en-us/security/blog/?p=149064",
-    "https://www.microsoft.com/en-us/security/blog/?p=149272"
+    "https://www.microsoft.com/en-us/security/blog/?p=149064"
   ]
 }
