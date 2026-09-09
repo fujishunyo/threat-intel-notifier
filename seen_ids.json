@@ -15,13 +15,14 @@
     "https://kasperskycontenthub.com/securelist/?p=121244"
   ],
   "Cisco Talos": [
-    "6a974588297ceb0001116102",
-    "6a97fbc85b9e1a0001b4e2c6",
-    "6a8dd50816c0b90001abb0ff",
-    "6a8df88216c0b90001abb14b",
     "6a8c42f9a4773e00014cdf4e",
+    "6a8df88216c0b90001abb14b",
+    "6a97fbc85b9e1a0001b4e2c6",
+    "6a974588297ceb0001116102",
     "6a8f25b509b4ad0001399a54",
+    "6a7b679c84f2640001d1562b",
     "6a987a665b9e1a0001b4e2cc",
+    "6a8dd50816c0b90001abb0ff",
     "6aa0887d3930c20001ad11a5"
   ],
   "Microsoft Threat Intelligence": [
