@@ -24,15 +24,16 @@
     "https://unit42.paloaltonetworks.com/?p=186821"
   ],
   "Securelist (Kaspersky)": [
-    "https://kasperskycontenthub.com/securelist/tr/auto-draft/121335/",
-    "https://kasperskycontenthub.com/securelist/?p=121159",
     "https://kasperskycontenthub.com/securelist/?p=121244",
+    "https://kasperskycontenthub.com/securelist/?p=121537",
+    "https://kasperskycontenthub.com/securelist/?p=121383",
+    "https://kasperskycontenthub.com/securelist/?p=121159",
     "https://kasperskycontenthub.com/securelist/?p=121091",
     "https://kasperskycontenthub.com/securelist/tr/auto-draft/121323/",
     "https://kasperskycontenthub.com/securelist/?p=121175",
-    "https://kasperskycontenthub.com/securelist/?p=121383",
+    "https://kasperskycontenthub.com/securelist/?p=121344",
     "https://kasperskycontenthub.com/securelist/?p=121270",
-    "https://kasperskycontenthub.com/securelist/?p=121344"
+    "https://kasperskycontenthub.com/securelist/tr/auto-draft/121335/"
   ],
   "Cisco Talos": [
     "6ac66dcbe83d4c0001cd2fb9",
