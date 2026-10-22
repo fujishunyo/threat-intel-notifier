@@ -27,17 +27,18 @@
   ],
   "Securelist (Kaspersky)": [
     "https://kasperskycontenthub.com/securelist/?p=121537",
-    "https://kasperskycontenthub.com/securelist/?post_type=threat_response&p=121596",
-    "https://kasperskycontenthub.com/securelist/?p=121541",
-    "https://kasperskycontenthub.com/securelist/?p=121175",
-    "https://kasperskycontenthub.com/securelist/tr/auto-draft/121335/",
-    "https://kasperskycontenthub.com/securelist/?p=121383",
     "https://kasperskycontenthub.com/securelist/?p=121091",
+    "https://kasperskycontenthub.com/securelist/?p=121383",
     "https://kasperskycontenthub.com/securelist/?p=121244",
-    "https://kasperskycontenthub.com/securelist/?p=121270",
+    "https://kasperskycontenthub.com/securelist/?post_type=threat_response&p=121596",
+    "https://kasperskycontenthub.com/securelist/tr/auto-draft/121335/",
     "https://kasperskycontenthub.com/securelist/tr/auto-draft/121323/",
+    "https://kasperskycontenthub.com/securelist/?p=121159",
+    "https://kasperskycontenthub.com/securelist/?p=121175",
+    "https://kasperskycontenthub.com/securelist/?p=121541",
+    "https://kasperskycontenthub.com/securelist/?p=121270",
     "https://kasperskycontenthub.com/securelist/?p=121344",
-    "https://kasperskycontenthub.com/securelist/?p=121159"
+    "https://kasperskycontenthub.com/securelist/?p=121539"
   ],
   "Cisco Talos": [
     "6acd295a9f3e8a0001f8e78b",
